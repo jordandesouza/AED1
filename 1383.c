@@ -1,71 +1,48 @@
-##include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
 
-int main() {
-    int matriz[9][9];
-    int instancias, numero;
-    int controle[10];
-    int valido;
+int main(void) {
+    int t, k = 1;
+    if (scanf("%d", &t) != 1) return 0;
 
-    scanf("%d", &instancias);
+    while (t--) {
+        int a[9][9];
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                scanf("%d", &a[i][j]);
 
-    for (int k = 1; k <= instancias; k++) {
-        for (int i = 0; i < 9; i++) {
+        int ok = 1;
+
+        for (int i = 0; i < 9 && ok; i++) {
+            int f[10] = {0};
             for (int j = 0; j < 9; j++) {
-                scanf("%d", &matriz[i][j]);
+                int v = a[i][j];
+                if (v < 1 || v > 9 || ++f[v] > 1) { ok = 0; break; }
             }
         }
 
-        valido = 1;
-
-        for (int i = 0; i < 9 && valido; i++) {
-            memset(controle, 0, sizeof(controle));
-            for (int j = 0; j < 9; j++) {
-                numero = matriz[i][j];
-                if (controle[numero] == 1) {
-                    valido = 0;
-                    break;
-                }
-                controle[numero] = 1;
-            }
-        }
-
-        for (int j = 0; j < 9 && valido; j++) {
-            memset(controle, 0, sizeof(controle));
+        for (int j = 0; j < 9 && ok; j++) {
+            int f[10] = {0};
             for (int i = 0; i < 9; i++) {
-                numero = matriz[i][j];
-                if (controle[numero] == 1) {
-                    valido = 0;
-                    break;
-                }
-                controle[numero] = 1;
+                int v = a[i][j];
+                if (v < 1 || v > 9 || ++f[v] > 1) { ok = 0; break; }
             }
         }
 
-        for (int linhaInicial = 0; linhaInicial < 9 && valido; linhaInicial += 3) {
-            for (int colunaInicial = 0; colunaInicial < 9 && valido; colunaInicial += 3) {
-                memset(controle, 0, sizeof(controle));
-                for (int i = linhaInicial; i < linhaInicial + 3; i++) {
-                    for (int j = colunaInicial; j < colunaInicial + 3; j++) {
-                        numero = matriz[i][j];
-                        if (controle[numero] == 1) {
-                            valido = 0;
-                            break;
-                        }
-                        controle[numero] = 1;
+        for (int br = 0; br < 9 && ok; br += 3) {
+            for (int bc = 0; bc < 9 && ok; bc += 3) {
+                int f[10] = {0};
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        int v = a[br + i][bc + j];
+                        if (v < 1 || v > 9 || ++f[v] > 1) { ok = 0; break; }
                     }
-                    if (!valido) break;
+                    if (!ok) break;
                 }
             }
         }
 
-        printf("Instancia %d\n", k);
-        if (valido)
-            printf("SIM\n\n");
-        else
-            printf("NAO\n\n");
+        printf("Instancia %d\n", k++);
+        printf(ok ? "SIM\n\n" : "NAO\n\n");
     }
-
     return 0;
 }
