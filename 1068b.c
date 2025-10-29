@@ -1,45 +1,38 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define MAX 1000
 
 typedef struct node {
-    char c;
     struct node *next;
 } node;
 
-void push(node **top, char c) {
-    node *n = malloc(sizeof(node));
-    n->c = c;
+int push(node **top){
+    node *n = (node*)malloc(sizeof(node));
+    if (!n) return 0;
     n->next = *top;
     *top = n;
+    return 1;
 }
 
-int pop(node **top) {
-    if (*top == NULL) return 0;
+int popn(node **top){
+    if (!*top) return 0;
     node *t = *top;
     *top = t->next;
     free(t);
     return 1;
 }
 
-void clear(node **top) {
-    while (*top) pop(top);
-}
+void clear(node **top){ while (*top) popn(top); }
 
-int main() {
+int main(void){
     char s[MAX+1];
-    while (scanf("%s", s) != EOF) {
-        int n = strlen(s);
+    while (scanf(" %1000[^\n]", s) == 1) {
         node *st = NULL;
         int ok = 1;
-        for (int i = 0; i < n; i++) {
-            if (s[i] == '(') push(&st, '(');
-            else if (s[i] == ')') {
-                if (!pop(&st)) { ok = 0; break; }
-            }
+        for (int i = 0; s[i]; i++) {
+            if (s[i] == '(') { if (!push(&st)) { ok = 0; break; } }
+            else if (s[i] == ')') { if (!popn(&st)) { ok = 0; break; } }
         }
         if (st) ok = 0;
         clear(&st);
