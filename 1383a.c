@@ -1,35 +1,48 @@
 #include <stdio.h>
 
-int valido(int m[9][9]) {
-    int i, j, k, l, v[10];
-    for (i = 0; i < 9; i++) {
-        for (j = 1; j <= 9; j++) v[j] = 0;
-        for (j = 0; j < 9; j++) v[m[i][j]]++;
-        for (j = 1; j <= 9; j++) if (v[j] != 1) return 0;
-    }
-    for (j = 0; j < 9; j++) {
-        for (i = 1; i <= 9; i++) v[i] = 0;
-        for (i = 0; i < 9; i++) v[m[i][j]]++;
-        for (i = 1; i <= 9; i++) if (v[i] != 1) return 0;
-    }
-    for (i = 0; i < 9; i += 3) {
-        for (j = 0; j < 9; j += 3) {
-            for (k = 1; k <= 9; k++) v[k] = 0;
-            for (k = 0; k < 3; k++) for (l = 0; l < 3; l++) v[m[i+k][j+l]]++;
-            for (k = 1; k <= 9; k++) if (v[k] != 1) return 0;
-        }
-    }
-    return 1;
-}
+int main(void) {
+    int t, k = 1;
+    if (scanf("%d", &t) != 1) return 0;
 
-int main() {
-    int n, inst = 1, i, j;
-    scanf("%d", &n);
-    while (n--) {
-        int m[9][9];
-        for (i = 0; i < 9; i++) for (j = 0; j < 9; j++) scanf("%d", &m[i][j]);
-        printf("Instancia %d\n", inst++);
-        if (valido(m)) printf("SIM\n\n"); else printf("NAO\n\n");
+    while (t--) {
+        int a[9][9];
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                scanf("%d", &a[i][j]);
+
+        int ok = 1;
+
+        for (int i = 0; i < 9 && ok; i++) {
+            int f[10] = {0};
+            for (int j = 0; j < 9; j++) {
+                int v = a[i][j];
+                if (v < 1 || v > 9 || ++f[v] > 1) { ok = 0; break; }
+            }
+        }
+
+        for (int j = 0; j < 9 && ok; j++) {
+            int f[10] = {0};
+            for (int i = 0; i < 9; i++) {
+                int v = a[i][j];
+                if (v < 1 || v > 9 || ++f[v] > 1) { ok = 0; break; }
+            }
+        }
+
+        for (int br = 0; br < 9 && ok; br += 3) {
+            for (int bc = 0; bc < 9 && ok; bc += 3) {
+                int f[10] = {0};
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        int v = a[br + i][bc + j];
+                        if (v < 1 || v > 9 || ++f[v] > 1) { ok = 0; break; }
+                    }
+                    if (!ok) break;
+                }
+            }
+        }
+
+        printf("Instancia %d\n", k++);
+        printf(ok ? "SIM\n\n" : "NAO\n\n");
     }
     return 0;
 }
