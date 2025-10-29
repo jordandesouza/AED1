@@ -1,30 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-int main() {
-    int N;
-    scanf("%d", &N);
-
-    int *X = (int*) malloc(N * sizeof(int));
-    if (X == NULL) return 1;
-
-    for (int i = 0; i < N; i++) {
-        scanf("%d", &X[i]);
+int main(void){
+    int N, i, v, min, pos;
+    if (scanf("%d", &N) != 1) return 0;
+    scanf("%d", &min); pos = 0;
+    for (i = 1; i < N; i++){
+        scanf("%d", &v);
+        if (v < min){ min = v; pos = i; }
     }
-
-    int menor = X[0];
-    int pos = 0;
-
-    for (int i = 1; i < N; i++) {
-        if (X[i] < menor) {
-            menor = X[i];
-            pos = i;
-        }
-    }
-
-    printf("Menor valor: %d\n", menor);
-    printf("Posicao: %d\n", pos);
-
-    free(X);
+    printf("Menor valor: %d\nPosicao: %d\n", min, pos);
     return 0;
 }
